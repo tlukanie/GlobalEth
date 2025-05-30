@@ -1,10 +1,13 @@
 import sys
 from commands.identify import cmd_identify
 from commands.help import cmd_help
+from commands.wallet import cmd_wallet
 
 COMMANDS = {
     "identify": cmd_identify,
     "i": cmd_identify,
+    "wallet": cmd_wallet,
+    "w": cmd_wallet,
     "help": lambda args=None: cmd_help(),
     "exit": lambda args=None: sys.exit(0),
 }
