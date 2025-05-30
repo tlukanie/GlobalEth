@@ -27,3 +27,9 @@ how to do request on api on this adress `0xf166820f9023dd8a196981c82482e3e05afb7
 https://eth-sepolia.blockscout.com/   - use this api.
 
 Wallet - `0xa923c876d27dfd11b6d239ec0f4808cd889350f4`
+
+
+About transactions
+```
+wallet tansactions [adress]
+```
