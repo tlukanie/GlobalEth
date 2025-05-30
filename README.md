@@ -12,22 +12,14 @@ A simple Python CLI tool to identify blockchain networks (e.g., Bitcoin, Ethereu
 
 * exit: Exits the application
 
-
-
-Blockscout API will provide info about all transactions by txid
-
-transaction id is txid.
-
 Example
 
-of hash: `Sepolia testnet` :
+* `Sepolia testnet` - `0xf166820f9023dd8a196981c82482e3e05afb75a926d409d3ad0af71606b37b50`
 
-how to do request on api on this adress `0xf166820f9023dd8a196981c82482e3e05afb75a926d409d3ad0af71606b37b50` in sepolia testnet
+* `Rootstock testnet` - `0xe1e34f06af27e0c56ae85132826e3cb6d1112ba2ae42086b24f9b80bbee491fc`
 
-https://eth-sepolia.blockscout.com/   - use this api.
-
-Wallet - `0xa923c876d27dfd11b6d239ec0f4808cd889350f4`
-
+failed - Blocknumber does not match the last publication block
+* `Rootstock testnet` - `0x51e1b5933ac9ad2b9c0d096ca4ae34722f648c17612f3a9b3447426ec79bae50`
 
 About transactions
 ```

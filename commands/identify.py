@@ -16,7 +16,6 @@ NETWORKS = [
 HEADERS = {"Content-Type": "application/json"}
 
 def eth_rpc(url, method, params):
-    """Helper to do a JSON-RPC POST to a blockchain API."""
     payload = {
         "jsonrpc": "2.0",
         "id": 1,
@@ -31,18 +30,12 @@ def eth_rpc(url, method, params):
         return None
 
 def check_transaction_in_network(network, tx_hash):
-    """Check if a transaction exists in a specific network."""
     tx = eth_rpc(network["rpc_url"], "eth_getTransactionByHash", [tx_hash])
     if tx is None:
         return None
 
     receipt = eth_rpc(network["rpc_url"], "eth_getTransactionReceipt", [tx_hash]) or {}
-
-    return {
-        "network": network,
-        "tx": tx,
-        "receipt": receipt
-    }
+    return {"network": network, "tx": tx, "receipt": receipt}
 
 def cmd_identify(args):
     if not args:
@@ -50,38 +43,35 @@ def cmd_identify(args):
         return
 
     tx_hash = args[0]
-    print(f"\n🔍 Looking up transaction: {tx_hash}")
+    print(f"Looking up transaction: {tx_hash}")
 
-    # Try each network until we find the transaction
     result = None
     for network in NETWORKS:
         print(f"Checking {network['name']}...")
         result = check_transaction_in_network(network, tx_hash)
         if result:
-            print(f"✅ Transaction found on {network['name']}!")
+            print(f"Transaction found on {network['name']}!")
             break
 
     if not result:
-        print("❌ Transaction not found in any supported network.")
+        print("Transaction not found in any supported network.")
         return
 
-    # Extract transaction details
     tx = result["tx"]
     receipt = result["receipt"]
     network = result["network"]
 
-    status     = receipt.get("status", "0x0")
-    block_num  = int(tx.get("blockNumber", "0x0"), 16)
-    frm        = tx.get("from")
-    to         = tx.get("to")
-    value_wei  = int(tx.get("value", "0x0"), 16)
-    gas_used   = int(receipt.get("gasUsed", "0x0"), 16)
-    gas_limit  = int(tx.get("gas", "0x0"), 16)
-    gas_price  = int(tx.get("gasPrice", "0x0"), 16)
-    fee_wei    = gas_used * gas_price
+    status = receipt.get("status", "0x0")
+    block_num = int(tx.get("blockNumber", "0x0"), 16)
+    frm = tx.get("from")
+    to = tx.get("to")
+    value_wei = int(tx.get("value", "0x0"), 16)
+    gas_used = int(receipt.get("gasUsed", "0x0"), 16)
+    gas_limit = int(tx.get("gas", "0x0"), 16)
+    gas_price = int(tx.get("gasPrice", "0x0"), 16)
+    fee_wei = gas_used * gas_price
 
-    # Display transaction details
-    print(f"\n--- Transaction Details ({network['name']}) ---")
+    print(f"\nTransaction Details ({network['name']})")
     print(f"Transaction:   {tx_hash}")
     print(f"Status:        {'Success' if status=='0x1' else 'Failed'}")
     print(f"Block:         {block_num}")
