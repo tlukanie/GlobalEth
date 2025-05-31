@@ -5,7 +5,7 @@ import type { NextPage } from "next";
 import axios from "axios"; // Import axios for API calls"use client";
 // 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
 import { PaperAirplaneIcon } from "@heroicons/react/24/solid";
-import { motion, AnimatePresence } from "framer-motion";
+import Image from 'next/image';
 
 const Home: NextPage = () => {
   const [messages, setMessages] = useState<string[]>([]);
@@ -102,9 +102,18 @@ const Home: NextPage = () => {
               </>
             )}
             {isLoading && (
-              <div className="flex justify-center p-2">
-                <span className="loading loading-dots loading-sm text-primary"></span>
-              </div>
+               <div className="flex justify-center p-2">
+               <div className="relative w-8 h-8">
+               <Image
+      src="/loader.png"
+      alt="Loading..."
+      className="animate-spin"
+      fill
+      sizes="32x32"
+      priority
+    />
+               </div>
+             </div>
             )}
           </div>
   
