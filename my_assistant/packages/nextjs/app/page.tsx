@@ -12,11 +12,16 @@ const Home: NextPage = () => {
   const [inputValue, setInputValue] = useState<string>("");
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
+  const inputRef = useRef<HTMLInputElement>(null);
 
     // Auto-scroll to bottom of messages
     useEffect(() => {
       messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
     }, [messages]);
+    // Auto-focus the input
+    useEffect(() => {
+      inputRef.current?.focus();
+    }, [isLoading]);
 
   const handleSend = async () => {
     if (inputValue.trim() === "") return;
@@ -107,6 +112,7 @@ const Home: NextPage = () => {
           <div className="border-t border-base-300 p-4 bg-base-100">
             <div className="flex gap-2">
               <input
+                ref={inputRef}
                 type="text"
                 value={inputValue}
                 onChange={(e) => setInputValue(e.target.value)}
