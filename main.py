@@ -1,33 +1,37 @@
-import sys
+import re
 from commands.identify import cmd_identify
-from commands.help import cmd_help
 from commands.wallet import cmd_wallet
 
-COMMANDS = {
-    "identify": cmd_identify,
-    "i": cmd_identify,
-    "wallet": cmd_wallet,
-    "w": cmd_wallet,
-    "help": lambda args=None: cmd_help(),
-    "exit": lambda args=None: sys.exit(0),
-}
+def parse_and_route_command(user_input):
+    """Parse user input and route to the appropriate command."""
+    user_input = user_input.lower().strip()
 
-def main():
-    print("Type 'help' for commands")
+    # Check for transaction-related keywords
+    if re.search(r'\b(transaction|tx|check|txid|trans)\b', user_input):
+        # Extract arguments (e.g., transaction hash)
+        args = user_input.split()
+        cmd_identify(args[1:])  # Pass the transaction hash to cmd_identify
+
+    # Check for wallet-related keywords
+    elif re.search(r'\b(wallet|address|account|wall|find)\b', user_input):
+        # Extract arguments (e.g., wallet address)
+        args = user_input.split()
+        cmd_wallet(args[1:])  # Pass the wallet address to cmd_wallet
+
+    else:
+        print("Unknown command. Please specify 'transaction' or 'wallet'.")
+
+# Example usage
+if __name__ == "__main__":
+    print("Type 'exit' to quit the program.")
     while True:
-        try:
-            raw = input("> ").strip()
-            if not raw:
-                continue
-            parts = raw.split()
-            cmd, args = parts[0], parts[1:]
-            if cmd in COMMANDS:
-                COMMANDS[cmd](args)
-            else:
-                print(f"Unknown command: {cmd!r}")
-        except (KeyboardInterrupt, EOFError):
-            print()
+        # Prompt the user for input
+        user_input = input("> ").strip()
+
+        # Exit condition
+        if user_input.lower() == "exit":
+            print("Exiting the program. Goodbye!")
             break
 
-if __name__ == "__main__":
-    main()
+        # Process the input
+        parse_and_route_command(user_input)
