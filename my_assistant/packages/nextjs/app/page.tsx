@@ -103,13 +103,13 @@ const Home: NextPage = () => {
             )}
             {isLoading && (
                <div className="flex justify-center p-2">
-               <div className="relative w-8 h-8">
+               <div className="relative w-16 h-16">
                <Image
       src="/loader.png"
       alt="Loading..."
       className="animate-spin"
       fill
-      sizes="32x32"
+      sizes="128x128"
       priority
     />
                </div>
