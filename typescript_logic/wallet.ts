@@ -1,4 +1,4 @@
-import * as axios from "axios";
+ import * as axios from "axios";
 
 const RPC_URL = "https://eth-sepolia.blockscout.com/api/eth-rpc";
 const API_URL = "https://eth-sepolia.blockscout.com/api/v2";

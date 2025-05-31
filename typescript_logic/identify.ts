@@ -48,7 +48,7 @@ async function checkTransactionInNetwork(network: Network, txHash: string): Prom
 
 async function identifyIntent(userInput: string): Promise<string | null> {
     const apiUrl = "https://api-inference.huggingface.co/models/facebook/bart-large-mnli";
-    const headers = { Authorization: `Bearer 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` };
+    const headers = { Authorization: `Bearer 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` };
     const payload = {
         inputs: userInput,
         parameters: { candidate_labels: ["wallet", "transaction"] }

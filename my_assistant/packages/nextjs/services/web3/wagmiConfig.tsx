@@ -12,7 +12,8 @@ export const enabledChains = targetNetworks.find((network: Chain) => network.id 
   ? targetNetworks
   : ([...targetNetworks, mainnet] as const);
 
-export const wagmiConfig = createConfig({
+// Create the client configuration only once
+const clientConfig = {
   chains: enabledChains,
   connectors: wagmiConnectors,
   ssr: true,
@@ -26,7 +27,6 @@ export const wagmiConfig = createConfig({
       const alchemyHttpUrl = getAlchemyHttpUrl(chain.id);
       if (alchemyHttpUrl) {
         const isUsingDefaultKey = scaffoldConfig.alchemyApiKey === DEFAULT_ALCHEMY_API_KEY;
-        // If using default Scaffold-ETH 2 API key, we prioritize the default RPC
         rpcFallbacks = isUsingDefaultKey ? [http(), http(alchemyHttpUrl)] : [http(alchemyHttpUrl), http()];
       }
     }
@@ -41,4 +41,7 @@ export const wagmiConfig = createConfig({
         : {}),
     });
   },
-});
+};
+
+// Export a single instance of the wagmi config
+export const wagmiConfig = createConfig(clientConfig);
