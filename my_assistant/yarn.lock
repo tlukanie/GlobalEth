@@ -11074,6 +11074,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"react@npm:^19.1.0":
+  version: 19.1.0
+  resolution: "react@npm:19.1.0"
+  checksum: c0905f8cfb878b0543a5522727e5ed79c67c8111dc16ceee135b7fe19dce77b2c1c19293513061a8934e721292bfc1517e0487e262d1906f306bdf95fa54d02f
+  languageName: node
+  linkType: hard
+
 "react@npm:~19.0.0":
   version: 19.0.0
   resolution: "react@npm:19.0.0"
@@ -11454,6 +11461,7 @@ __metadata:
     framer-motion: ^12.15.0
     husky: ~9.1.6
     lint-staged: ~13.2.2
+    react: ^19.1.0
   languageName: unknown
   linkType: soft
 
@@ -13723,9 +13731,9 @@ __metadata:
   linkType: hard
 
 "zod@npm:^3.22.4":
-  version: 3.25.42
-  resolution: "zod@npm:3.25.42"
-  checksum: 47c47acf3f98a92057e5ad1eb026953390a9a1b55affa574981b46b91bb17cc63daff78d24f670ef5511481b8bfd26963bcfd169aa966a33d17f6ee719016554
+  version: 3.25.44
+  resolution: "zod@npm:3.25.44"
+  checksum: 1bb990d9305923a8a16c0376c6e995b8e196717771c4a2165a0035260b8ff87d742d3aab40ffc9db508cc9c1451a862e3bf80dc8af3a9a1fc3567d9b7b262ee4
   languageName: node
   linkType: hard
 
