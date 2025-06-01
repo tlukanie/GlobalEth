@@ -1,7 +1,12 @@
 import React, { useRef, useEffect } from 'react';
 
+interface Message {
+  text: string;
+  sender: 'user' | 'bot';
+}
+
 interface MessageListProps {
-  messages: string[];
+  messages: Message[];
   isLoading: boolean;
 }
 
@@ -23,15 +28,15 @@ const MessageList: React.FC<MessageListProps> = ({ messages, isLoading }) => {
           {messages.map((message, index) => (
             <div
               key={index}
-              className={`flex ${message.startsWith('You:') ? 'justify-end' : 'justify-start'}`}
+              className={`flex ${message.sender === 'user' ? 'justify-end' : 'justify-start'}`}
             >
               <div
-                className={`max-w-xs lg:max-w-md px-4 py-2 rounded-box ${message.startsWith('You:')
+                className={`max-w-xs lg:max-w-md px-4 py-2 rounded-box ${message.sender === 'user'
                   ? 'bg-primary text-primary-content'
                   : 'bg-base-100 text-base-content shadow-sm border border-base-300'
                   }`}
               >
-                <p className="text-sm">{message}</p>
+                <p className="text-sm">{message.text}</p>
               </div>
             </div>
           ))}

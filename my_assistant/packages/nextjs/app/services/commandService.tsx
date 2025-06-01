@@ -146,7 +146,7 @@ Limit your response to 3-4 sentences focusing on:
 2. Any notable findings or patterns
 3. Keep it simple for non-technical users
 
-Don't repeat all the data - explain what it means in plain language.`
+Don't repeat all the data - explain what it means in plain language. `
 					},
 					{
 						role: "user",
