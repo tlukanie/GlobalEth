@@ -7,22 +7,21 @@ import { PaperAirplaneIcon } from "@heroicons/react/24/solid";
 import { identifyTransaction } from "./identify";
 import { analyzeWallet } from "./wallet";
 
-// Message history for DeepSeek
+// Message history for DeepSeek - update the system message
 const messageHistory: Array<{
 	role: "system" | "user" | "assistant";
 	content: string;
 }> = [
 		{
 			role: "system",
-			content: `You are Larisa Assistant, a helpful AI. Provide concise, accurate responses.
-You have special commands to analyze blockchain data:
-1. identify [transaction hash] - Analyzes a blockchain transaction
-2. wallet [wallet address] - Analyzes a wallet's balance and activity
+			content: `You are Larisa Assistant, a helpful AI.
+Your responses must be:
+- Concise (maximum 5 sentences)
+- Plain text without markdown formatting
+- Friendly and informative
+- Focused on blockchain topics when relevant
 
-When users ask about transactions or wallets, determine if they want to execute these commands.
-Always respond with a JSON object with properties "useCommand" (boolean), "command" (string), and "params" (string).
-Example: {"useCommand": true, "command": "identify", "params": "0x123..."}
-`,
+When users ask about blockchain data, provide simple explanations without technical details.`
 		},
 	];
 
@@ -79,9 +78,9 @@ const Home: NextPage = () => {
 		}
 	}
 
+	// Update the processCommandIntent function to return just the needed information
 	async function processCommandIntent(userMessage: string) {
 		try {
-			// First analyze the user's intent
 			const response = await axios.post(
 				"https://api.deepseek.com/v1/chat/completions",
 				{
@@ -89,20 +88,18 @@ const Home: NextPage = () => {
 					messages: [
 						{
 							role: "system",
-							content: `You are an assistant that analyzes user messages to determine if they want to run a blockchain command.
+							content: `You analyze messages to identify blockchain data requests.
 Available commands are:
-1. identify [transaction hash] - Analyzes a blockchain transaction
-2. wallet [wallet address] - Analyzes a wallet's balance and activity
+1. identify [transaction hash] - Analyzes a transaction
+2. wallet [wallet address] - Analyzes a wallet
 
-If the user is asking about a transaction or wallet, extract the hash/address.
-Respond with a JSON object with properties:
-- useCommand: true if a command should be executed, false otherwise
-- command: "identify" or "wallet" if applicable
-- params: the transaction hash or wallet address if applicable
-- reason: brief explanation of your decision
+If the message asks about blockchain data, respond with ONLY a JSON object:
+{"command": "[identify or wallet]", "params": "[transaction hash or wallet address]"}
 
-Example: {"useCommand": true, "command": "identify", "params": "0x123abc...", "reason": "User asked about transaction details"}
-Do not include any other text in your response, only the JSON.`
+For any other message that doesn't need blockchain analysis, respond with:
+{"command": "chat"}
+
+DO NOT include any explanations - ONLY return the JSON object.`
 						},
 						{
 							role: "user",
@@ -121,50 +118,45 @@ Do not include any other text in your response, only the JSON.`
 
 			let content = response.data.choices[0].message.content;
 
-			// Improve JSON parsing to handle imperfect responses from DeepSeek
+			// Enhanced JSON parsing
 			try {
-				// First attempt to clean the response content
 				let cleanedContent = content.trim();
-
-				// Check if content is wrapped in markdown code blocks and extract
+				// Extract JSON from code blocks if present
 				const jsonBlockRegex = /```(?:json)?\s*([\s\S]*?)\s*```/;
 				const markdownMatch = cleanedContent.match(jsonBlockRegex);
 				if (markdownMatch && markdownMatch[1]) {
 					cleanedContent = markdownMatch[1].trim();
 				}
-
-				// Handle cases where there might be text before or after the JSON
+				// Find JSON object anywhere in the string
 				const jsonRegex = /\{[\s\S]*\}/;
 				const jsonMatch = cleanedContent.match(jsonRegex);
 				if (jsonMatch) {
 					cleanedContent = jsonMatch[0];
 				}
 
-				// Now try to parse the cleaned JSON
 				const intentData = JSON.parse(cleanedContent);
 
-				if (intentData.useCommand) {
-					if (intentData.command === "identify" && intentData.params) {
-						return {
-							useCommand: true,
-							command: "identify",
-							params: intentData.params
-						};
-					} else if (intentData.command === "wallet" && intentData.params) {
-						return {
-							useCommand: true,
-							command: "wallet",
-							params: intentData.params
-						};
-					}
+				if (intentData.command === "identify" && intentData.params) {
+					return {
+						useCommand: true,
+						command: "identify",
+						params: intentData.params
+					};
+				} else if (intentData.command === "wallet" && intentData.params) {
+					return {
+						useCommand: true,
+						command: "wallet",
+						params: intentData.params
+					};
 				}
+
+				// Not a blockchain command request
+				return { useCommand: false };
 			} catch (e) {
 				console.error("Error parsing intent JSON:", e);
 				console.log("Raw content:", content);
-				// Continue with regular message flow if JSON parsing fails
+				return { useCommand: false };
 			}
-
-			return { useCommand: false };
 		} catch (error) {
 			console.error("DeepSeek Intent Analysis Error:", error);
 			return { useCommand: false };
