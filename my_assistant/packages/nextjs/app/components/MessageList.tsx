@@ -1,4 +1,5 @@
 import React, { useRef, useEffect } from 'react';
+import Image from 'next/image';
 
 interface Message {
   text: string;
@@ -31,7 +32,7 @@ const MessageList: React.FC<MessageListProps> = ({ messages, isLoading }) => {
               className={`flex ${message.sender === 'user' ? 'justify-end' : 'justify-start'}`}
             >
               <div
-                className={`max-w-xs lg:max-w-md px-4 py-2 rounded-box ${message.sender === 'user'
+                className={`max-w-xs break-all lg:max-w-md px-4 py-2 rounded-box ${message.sender === 'user'
                   ? 'bg-primary text-primary-content'
                   : 'bg-base-100 text-base-content shadow-sm border border-base-300'
                   }`}
@@ -44,10 +45,19 @@ const MessageList: React.FC<MessageListProps> = ({ messages, isLoading }) => {
         </>
       )}
       {isLoading && (
-        <div className="flex justify-center p-2">
-          <span className="loading loading-dots loading-sm text-primary"></span>
-        </div>
-      )}
+               <div className="flex justify-center p-2">
+               <div className="relative w-24 h-24">
+               <Image
+      src="/loader.png"
+      alt="Loading..."
+      className="animate-spin"
+      fill
+      sizes="128x128"
+      priority
+    />
+               </div>
+             </div>
+            )}
     </div>
   );
 };

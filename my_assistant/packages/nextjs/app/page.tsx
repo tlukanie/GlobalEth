@@ -115,10 +115,10 @@ const Home: NextPage = () => {
 	};
 
 	return (
-		<div className="flex flex-col h-[80vh]">
-			<div className="flex-1 flex flex-col items-center p-4">
-				<div className="flex flex-col w-full max-w-2xl h-full bg-base-100 rounded-box shadow-xl border border-base-300 overflow-hidden">
-					<div className="bg-primary text-primary-content p-4">
+		<div className="flex flex-col h-full">
+        <div className="absolute inset-0 flex items-center justify-center p-4">
+            <div className="flex flex-col w-full max-w-2xl h-[90%] bg-base-100 rounded-box shadow-xl border border-base-300 overflow-hidden">
+                <div className="bg-primary text-primary-content p-4">
 						<h1 className="text-lg font-semibold text-center">Larisa Assistant</h1>
 					</div>
 
