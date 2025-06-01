@@ -11,6 +11,7 @@ const Home: NextPage = () => {
   const [messages, setMessages] = useState<string[]>([]);
   const [inputValue, setInputValue] = useState<string>("");
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [showAnimation, setShowAnimation] = useState<boolean>(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
 
@@ -22,6 +23,18 @@ const Home: NextPage = () => {
     useEffect(() => {
       inputRef.current?.focus();
     }, [isLoading]);
+
+    useEffect(() => {
+      const animationInterval = setInterval(() => {
+        setShowAnimation(true);
+        // Hide the animation after 3 seconds
+        setTimeout(() => {
+          setShowAnimation(false);
+        }, 5000);
+      }, 15000); // Show animation every 15 seconds
+      
+      return () => clearInterval(animationInterval);
+    }, []);
 
   const handleSend = async () => {
     if (inputValue.trim() === "") return;
@@ -66,14 +79,27 @@ const Home: NextPage = () => {
 
   return (
     <div className="flex flex-col h-full">
+      {/* Animated Image */}
+      <div className={`fixed right-0 top-1/3 transition-transform duration-700 ease-in-out z-50 ${
+        showAnimation ? 'translate-x-0' : 'translate-x-full'
+      }`}>
+        <Image 
+          src="/sapo.png"
+          alt="Animated element"
+          width={300}
+          height={300}
+          priority
+        />
+      </div>
+      
       {/* Chat Container */}
       <div className="absolute inset-0 flex items-center justify-center p-4">
-      <div className="flex flex-col w-full max-w-2xl h-[90%] bg-base-100 rounded-box shadow-xl border border-base-300 overflow-hidden">
-        {/* Header */}
+        <div className="flex flex-col w-full max-w-2xl h-[90%] bg-base-100 rounded-box shadow-xl border border-base-300 overflow-hidden">
+          {/* Header */}
           <div className="bg-primary text-primary-content p-4">
             <h1 className="text-lg font-semibold text-center">Larisa Assistant</h1>
           </div>
-  
+
           {/* Chat Area */}
           <div className="flex-1 overflow-y-auto p-4 space-y-4 bg-base-200">
             {messages.length === 0 ? (
@@ -102,18 +128,18 @@ const Home: NextPage = () => {
               </>
             )}
             {isLoading && (
-               <div className="flex justify-center p-2">
-               <div className="relative w-16 h-16">
-               <Image
-      src="/loader.png"
-      alt="Loading..."
-      className="animate-spin"
-      fill
-      sizes="128x128"
-      priority
-    />
-               </div>
-             </div>
+              <div className="flex justify-center p-2">
+                <div className="relative w-16 h-16">
+                  <Image
+                    src="/loader.png"
+                    alt="Loading..."
+                    className="animate-spin"
+                    fill
+                    sizes="128x128"
+                    priority
+                  />
+                </div>
+              </div>
             )}
           </div>
   
