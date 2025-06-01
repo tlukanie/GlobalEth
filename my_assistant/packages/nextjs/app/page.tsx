@@ -70,22 +70,33 @@ const Home: NextPage = () => {
             // Check for implicit commands via DeepSeek
             const intentAnalysis = await processCommandIntent(messageToSend);
 
-            if (intentAnalysis.useCommand && intentAnalysis.command && intentAnalysis.params) {
-                try {
-                    const commandAction = intentAnalysis.command === 'identify'
-                        ? "I'll check that transaction for you..."
-                        : "Analyzing that wallet address... This may take a moment.";
+			// In your handleSend function, update the command execution section:
 
-                    setMessages(prev => [...prev, `Bot: ${commandAction}`]);
-                    const result = await executeCommand(intentAnalysis.command, intentAnalysis.params);
-                    setMessages(prev => [...prev, `Bot: ${result}`]);
-                } catch (error) {
-                    setMessages(prev => [...prev, `Bot: Error analyzing that ${intentAnalysis.command}.`]);
-                } finally {
-                    setIsLoading(false);
-                    return;
-                }
-            }
+			if (intentAnalysis.useCommand && intentAnalysis.command && intentAnalysis.params) {
+				try {
+					const commandAction = intentAnalysis.command === 'identify'
+						? "I'll check that transaction for you..."
+						: "Analyzing that wallet address... This may take a moment.";
+
+					setMessages(prev => [...prev, `Bot: ${commandAction}`]);
+
+					// Get both results
+					const { rawResult, explanation } = await executeCommand(intentAnalysis.command, intentAnalysis.params);
+
+					// Display as separate messages
+					setMessages(prev => [...prev, `Bot: ${rawResult}`]);
+
+					// Only show explanation if we have one
+					if (explanation) {
+						setMessages(prev => [...prev, `Bot: My Analysis: ${explanation}`]);
+					}
+				} catch (error) {
+					setMessages(prev => [...prev, `Bot: Error analyzing that ${intentAnalysis.command}.`]);
+				} finally {
+					setIsLoading(false);
+					return;
+				}
+			}
 
             // Regular conversation flow
             try {
