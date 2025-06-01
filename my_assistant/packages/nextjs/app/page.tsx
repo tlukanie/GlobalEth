@@ -1,6 +1,7 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
+import Image from "next/image";
 import type { NextPage } from "next";
 import { callDeepSeekAPI, messageHistory } from "./services/deepseekService";
 import { processCommandIntent, executeCommand } from "./services/commandService";
@@ -19,6 +20,22 @@ const Home: NextPage = () => {
 	const [messages, setMessages] = useState<Message[]>([]);
 	const [inputValue, setInputValue] = useState<string>("");
 	const [isLoading, setIsLoading] = useState<boolean>(false);
+	const [showAnimation, setShowAnimation] = useState<boolean>(false);
+	const messagesEndRef = useRef<HTMLDivElement>(null);
+	const inputRef = useRef<HTMLInputElement>(null);
+
+	// Trigger the animation periodically
+	useEffect(() => {
+		const animationInterval = setInterval(() => {
+			setShowAnimation(true);
+			// Hide the animation after 5 seconds
+			setTimeout(() => {
+				setShowAnimation(false);
+			}, 5000);
+		}, 15000); // Show animation every 15 seconds
+
+		return () => clearInterval(animationInterval);
+	}, []);
 
 	const handleSend = async () => {
 		if (inputValue.trim() === "") return;
@@ -116,22 +133,37 @@ const Home: NextPage = () => {
 
 	return (
 		<div className="flex flex-col h-full">
-        <div className="absolute inset-0 flex items-center justify-center p-4">
-            <div className="flex flex-col w-full max-w-2xl h-[90%] bg-base-100 rounded-box shadow-xl border border-base-300 overflow-hidden">
-                <div className="bg-primary text-primary-content p-4">
+			{/* Animated Image */}
+			<div className={`fixed right-0 top-1/3 transition-transform duration-700 ease-in-out z-50 ${showAnimation ? 'translate-x-0' : 'translate-x-full'
+				}`}>
+				<Image
+					src="/sapo.png"
+					alt="Animated element"
+					width={300}
+					height={300}
+					priority
+				/>
+			</div>
+
+			{/* Chat Container */}
+			<div className="absolute inset-0 flex items-center justify-center p-4">
+				<div className="flex flex-col w-full max-w-2xl h-[90%] bg-base-100 rounded-box shadow-xl border border-base-300 overflow-hidden">
+					<div className="bg-primary text-primary-content p-4">
 						<h1 className="text-lg font-semibold text-center">Larisa Assistant</h1>
 					</div>
 
-					<MessageList messages={messages} isLoading={isLoading} />
+					<MessageList messages={messages} isLoading={isLoading} messagesEndRef={messagesEndRef} />
 
 					<InputArea
 						inputValue={inputValue}
 						setInputValue={setInputValue}
 						handleSend={handleSend}
 						isLoading={isLoading}
+						inputRef={inputRef}
 					/>
 				</div>
 			</div>
+			<div ref={messagesEndRef} />
 		</div>
 	);
 };

@@ -9,6 +9,7 @@ interface Message {
 interface MessageListProps {
   messages: Message[];
   isLoading: boolean;
+  messagesEndRef: React.RefObject<HTMLDivElement>;
 }
 
 const MessageList: React.FC<MessageListProps> = ({ messages, isLoading }) => {
