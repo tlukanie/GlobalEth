@@ -28,7 +28,8 @@ If the message asks about blockchain data, respond with ONLY a JSON object:
 For any other message that doesn't need blockchain analysis, respond with:
 {"command": "chat"}
 
-DO NOT include any explanations - ONLY return the JSON object.`
+DO NOT include any explanations - ONLY return the JSON object.
+Don't use markdown formatting or code blocks.`
 					},
 					{
 						role: "user",
@@ -146,7 +147,8 @@ Limit your response to 3-4 sentences focusing on:
 2. Any notable findings or patterns
 3. Keep it simple for non-technical users
 
-Don't repeat all the data - explain what it means in plain language. `
+Don't repeat all the data - explain what it means in plain language.
+Don't use markdown formatting or code blocks.`
 					},
 					{
 						role: "user",

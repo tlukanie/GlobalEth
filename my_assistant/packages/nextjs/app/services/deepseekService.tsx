@@ -14,7 +14,8 @@ Your responses must be:
 - Friendly and informative
 - Focused on blockchain topics when relevant
 
-When users ask about blockchain data, provide simple explanations without technical details.`
+When users ask about blockchain data, provide simple explanations without technical details.
+Don't use markdown formatting or code blocks.`
     },
 ];
 

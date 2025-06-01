@@ -120,15 +120,24 @@ export async function analyzeWallet(userInput: string): Promise<string> {
 	const networkPromises = NETWORKS.map(async (network) => {
 		try {
 			const info = await getWalletInfo(network, address);
+
+			// Check if the wallet has meaningful activity on this network
+			// (non-zero balance, transactions, or tokens)
+			const isActive =
+				info.balance !== "0.00000000 ETH" &&
+				(info.transactions > 0 || info.tokens > 0);
+
 			return {
 				network: network.name,
 				success: true,
+				isActive,
 				info
 			};
 		} catch (error) {
 			return {
 				network: network.name,
 				success: false,
+				isActive: false,
 				error: error instanceof Error ? error.message : 'Unknown error'
 			};
 		}
@@ -137,15 +146,33 @@ export async function analyzeWallet(userInput: string): Promise<string> {
 	// Wait for all network checks to complete
 	const results = await Promise.all(networkPromises);
 
-	// Format results
-	for (const res of results) {
-		if (res.success) {
-			const info = res.info;
-			result += `
+	// Filter to only show active networks
+	const activeNetworks = results.filter(res => res.isActive);
+
+	// If no active networks found, show a different message
+	if (activeNetworks.length === 0) {
+		result = `Address ${address} was not found or has no activity on any of the supported networks.`;
+
+		// But if we have a contract account on any network, show that
+		const contractNetworks = results.filter(res =>
+			res.success && res.info.accountType.includes("Contract")
+		);
+
+		if (contractNetworks.length > 0) {
+			result += "\n\nThis address appears to be a contract on these networks:";
+			for (const net of contractNetworks) {
+				result += `\n- ${net.network}`;
+			}
+		}
+	} else {
+		// Format results for active networks only
+		for (const res of activeNetworks) {
+			if (res.success) {
+				const info = res.info;
+				result += `
 Wallet Information (${res.network})
 Address:           ${address}
-Delegated to:      ${info.delegatedTo}
-Balance:           ${info.balance}
+${info.accountType === "Contract" ? `Delegated to:      ${info.delegatedTo}\n` : ''}Balance:           ${info.balance}
 Tokens:            ${info.tokens}
 Transactions:      ${info.transactions}
 Transfers:         ${info.transfers}
@@ -154,8 +181,7 @@ Last balance update: ${info.lastBalanceUpdate}
 Account Type:      ${info.accountType}
 
 `;
-		} else {
-			result += `\nError checking ${res.network}: ${res.error}\n`;
+			}
 		}
 	}
 
