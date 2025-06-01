@@ -6,26 +6,23 @@ import axios from "axios";
 import { PaperAirplaneIcon } from "@heroicons/react/24/solid";
 import { identifyTransaction } from "./identify";
 import { analyzeWallet } from "./wallet";
-import Image from 'next/image';
 
 const Home: NextPage = () => {
-  const [messages, setMessages] = useState<string[]>([]);
-  const [inputValue, setInputValue] = useState<string>("");
-  const [isLoading, setIsLoading] = useState<boolean>(false);
-  const messagesEndRef = useRef<HTMLDivElement>(null);
-  const inputRef = useRef<HTMLInputElement>(null);
+	const [messages, setMessages] = useState<string[]>([]);
+	const [inputValue, setInputValue] = useState<string>("");
+	const [isLoading, setIsLoading] = useState<boolean>(false);
+	const messagesEndRef = useRef<HTMLDivElement>(null);
+	const inputRef = useRef<HTMLInputElement>(null);
 
-    // Auto-scroll to bottom of messages
-    useEffect(() => {
-      messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
-    }, [messages]);
-    // Auto-focus the input
-    useEffect(() => {
-      inputRef.current?.focus();
-    }, [isLoading]);
+	// Auto-scroll to bottom of messages
 	useEffect(() => {
 		messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
 	}, [messages]);
+
+	// Auto-focus the input
+	useEffect(() => {
+		inputRef.current?.focus();
+	}, [isLoading]);
 
 	const handleSend = async () => {
 		if (inputValue.trim() === "") return;
@@ -64,7 +61,7 @@ const Home: NextPage = () => {
 			}
 
 			try {
-				setMessages(prev => [...prev, `Bot: Starting wallet analysis...`]);
+				setMessages(prev => [...prev, `Bot: Starting wallet analysis... This may take a moment.`]);
 				const result = await analyzeWallet(messageToSend);
 				setMessages(prev => [...prev, `Bot: ${result}`]);
 			} catch (error) {
