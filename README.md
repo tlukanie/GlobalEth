@@ -1,4 +1,4 @@
-# Blockchain Analysis Assistant
+# Blockchain Analysis Assistant 🐀
 
 A chat application with blockchain analysis capabilities that helps analyze transactions and wallet information while providing a conversational interface.
 
